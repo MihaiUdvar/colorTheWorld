@@ -9,7 +9,6 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
   const contentIds = ref([])
   const products = ref([])
   const loaded = ref(false)
-  //   const quantity = ref(0) //this comes from the number of pasengers traveling on this booking
   const selectedProduct = ref()
   const selectedExtras = ref([])
   const errors = ref([])
@@ -65,7 +64,6 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
 
   //set product for details modal
   function setProduct(reference) {
-    // quantity.value = 1
     selectedProduct.value = products.value.find((product) => product.reference === reference)
     console.log(selectedProduct.value)
   }
