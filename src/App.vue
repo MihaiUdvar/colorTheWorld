@@ -17,7 +17,7 @@ import Error from './views/Error.vue'
 import { useExtrasStore } from './stores/ExtrasStore'
 
 const extrasStore = useExtrasStore()
-const { domain, errors } = storeToRefs(extrasStore)
+const { domain } = storeToRefs(extrasStore)
 
 //geting the domain when on live route
 const getDomain = () => {

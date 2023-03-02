@@ -37,7 +37,7 @@ import ExtrasCard from '../components/ExtrasCard.vue'
 import DetailsModal from '../components/DetailsModal.vue'
 
 const extrasStore = useExtrasStore()
-const { products, loaded, domain, selectedProduct, quantity } = storeToRefs(extrasStore)
+const { products, loaded, selectedProduct, quantity } = storeToRefs(extrasStore)
 const modalOpened = ref(false)
 
 await extrasStore.fetchExtras()
