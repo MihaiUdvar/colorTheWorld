@@ -99,11 +99,12 @@ const backgroundImage = computed(() => {
 });
 
 const addtoCart = () => {
-  quantity.value == 0 ? (quantity.value = 1) : quantity.value;
+  quantity.value == 0 ? extrasStore.addProduct() : quantity.value;
   emit("backTolist");
 };
 
 const selectTime = () => {
+  extrasStore.addProduct();
   timeSelected.value = true;
 };
 </script>
