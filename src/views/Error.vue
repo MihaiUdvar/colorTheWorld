@@ -11,13 +11,11 @@
     </div>
   </div>
 </template>
-    
+
     <script setup>
 
 const props = defineProps({
   error: String
 })
 
-console.log(props.error)
 </script>
-    

@@ -20,7 +20,6 @@ export const getExtrasContent = (products, domain) => {
   }
   axios.post(CONTENT_URL, requestBody).then((response) => {
     if (response.data) {
-      console.log(response.data)
       return response.data
     } else {
       return Promise.reject(`Could not fetch content`)
