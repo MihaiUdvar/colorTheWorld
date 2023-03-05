@@ -7,20 +7,20 @@
       :style="backgroundImage"
     >
       <button class="close-button" @click="$emit('backTolist')">
-        <div><span>Lukk og tilbake</span>&nbsp;<strong>X</strong></div>
+        <div><span>{{ extrasStore.getStaticStrings()[5] }}</span>&nbsp;<strong>X</strong></div>
       </button>
       <div class="textwrapper">
         <span class="short">
           {{ selectedProduct.shortDescription }}<br />
         </span>
         <span class="location">
-          Serveres i {{ selectedProduct.location }}
+          {{ extrasStore.getStaticStrings()[3] }} {{ selectedProduct.location }}
         </span>
       </div>
     </div>
     <div class="card-info">
       <h2 style="margin: 0; padding: 0">{{ selectedProduct.title }}</h2>
-      <span>Voksne</span>&nbsp;
+      <span>{{ extrasStore.getStaticStrings()[6] }}</span>&nbsp;
       <h2>
         {{ selectedProduct.Price["Currency"] }}&nbsp;{{
           selectedProduct.Price["Amount"]
@@ -56,7 +56,7 @@
         </div>
         <div class="price-and-select">
           <div class="price-info">
-            <div class="price-label">Sum:</div>
+            <div class="price-label">{{ extrasStore.getStaticStrings()[7] }}:</div>
             <strong class="price-sum">
               {{ selectedProduct.Price["Currency"] }}&nbsp;{{ totalPrice }}–
             </strong>
@@ -74,7 +74,7 @@
     </div>
   </div>
 </template>
-  
+
 <script setup>
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
@@ -108,4 +108,3 @@ const selectTime = () => {
   timeSelected.value = true;
 };
 </script>
-  

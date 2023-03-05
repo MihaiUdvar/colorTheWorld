@@ -7,20 +7,55 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
   const extras = ref()
   const domain = ref('no')
   const contentIds = ref([])
-  const products = ref([])
+  let products = ref([])
   const loaded = ref(false)
   const selectedProduct = ref()
   const selectedExtras = ref([])
   const errors = ref([])
+  const noStrings = ["Extras om bord",
+    "Min reise",
+    "Pris pr stk. ",
+    "Serveres i",
+    "Sushi, trening, bading, golf - fordi det å slappe av på et cruise ikke alltid er nok!",
+    "Lukk og tilbake",
+    "Voksne",
+    "Totalt"
+  ]
+  const comStrings = ["Extras on board",
+    "My trip",
+    "Price ",
+    "Served in",
+    "Sushi, training, pool, golf - because sometimes lounging on a cruise ship just isn't enough. Join us for some extra fun in the sun!",
+    "Close and back",
+    "Adults",
+    "Total"
+  ]
 
-  //toggle language. This can come from user settings if logged in or from an array of existing languages in the system that can be set to the local storage
   function setLanguage() {
-    domain.value == 'no' ? (domain.value = 'en') : (domain.value = 'no')
+    domain.value === 'no' ? (domain.value = 'en') : (domain.value = 'no')
     localStorage.setItem('language', domain.value)
+    fetchExtras().then(r => { return r});
+  }
+
+  function toggleDomain() {
+    this.domain = this.domain === "no" ? "com" : "no"
+    localStorage.setItem('language', this.domain.value)
+  }
+  function getDomain() {
+    return this.domain === "no" ? "Norwegian" : "English";
+  }
+  function getStaticStrings() {
+    return this.domain === "no" ? noStrings : comStrings;
+  }
+  function getNoStrings() {
+    return noStrings;
+  }
+  function getComStrings() {
+    return comStrings;
   }
 
   async function fetchExtras() {
-    if (products.value.length == 0) {
+      products.value.splice(0);
       try {
         const getExtras = await fetch(EXTRAS_URL)
         extras.value = await getExtras.json()
@@ -32,12 +67,13 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             sailingsReference: 'OOOYYY000000000000',
-            domain: domain.value,
+            domain: this.domain,
             getProducts: contentIds.value
           })
         })
         const extrasContent = await getContent.json()
         //   console.log(extrasContent)
+        /*
         for (let i = 0; i < extras.value['Extras'].length; i++) {
           const obj1 = extras.value['Extras'][i]
           for (let j = 0; j < extrasContent.products.length; j++) {
@@ -48,11 +84,18 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
             }
           }
         }
+        */
+         products.value = mergeLists(extras.value, extrasContent);
         loaded.value = true
       } catch (error) {
         errors.value.push(error.toString())
       }
-    }
+
+  }
+
+  function mergeLists(extras, content) {
+    let extrasList = JSON.parse(JSON.stringify(extras));
+    return extrasList.Extras.map((extra, i) => Object.assign({}, extra, content.products[i]));
   }
 
   //set references of products to fetch content for
@@ -65,7 +108,10 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
   //set product for details modal
   function setProduct(reference) {
     selectedProduct.value = products.value.find((product) => product.reference === reference)
-    console.log(selectedProduct.value)
+  }
+
+  function getQuantity(reference) {
+    return selectedExtras.value.find((extra) => extra.reference == reference)?.quantity || 0;
   }
 
   function addProduct() {
@@ -78,7 +124,6 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
     } else {
       selectedExtras.value.push(selected)
     }
-    console.log(selectedExtras.value)
   }
 
   function removeProduct() {
@@ -90,14 +135,12 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
     found.quantity > 1
       ? (found.quantity -= 1)
       : selectedExtras.value.splice(selectedExtras.value.indexOf(found), 1)
-    console.log(selectedExtras.value)
   }
 
   const quantity = computed(() => {
     let item = selectedExtras.value.find(
       (extra) => extra.reference == selectedProduct.value.reference
     )
-    console.log(item)
     return item ? item.quantity : 0
   })
 
@@ -112,7 +155,13 @@ export const useExtrasStore = defineStore('ExtrasStore', () => {
     errors,
     fetchExtras,
     setLanguage,
+    getStaticStrings,
+    getNoStrings,
+    getComStrings,
+    getDomain,
+    toggleDomain,
     setProduct,
+    getQuantity,
     addProduct,
     removeProduct
   }

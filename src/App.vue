@@ -25,7 +25,6 @@ const getDomain = () => {
   const url = ' www.colorline.no'
   const hostname = url ? url.substring(url.lastIndexOf('.') + 1) : 'com'
   domain.value = hostname
-  console.log(url.substring(url.lastIndexOf('.') + 1))
 }
 
 getDomain()
